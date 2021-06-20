@@ -14,7 +14,7 @@ intents.members = True
 intents.presences = True
 
 client = commands.Bot(command_prefix='/', intents=intents)
-TOKEN = 'ODQ5OTA3MzQxNjUwMjk2ODky.YLh_5A.3XtLSRVX_01XQ09BFuHz376TPv8'
+TOKEN = 'ODQ5OTA3MzQxNjUwMjk2ODky.YLh_5A.3-CNeuYUy2hiGAGTDEb-X0EjQJY'
 slash = SlashCommand(client, sync_commands=True)
 
 
