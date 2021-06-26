@@ -8,6 +8,7 @@ from discord_slash import SlashCommand, SlashContext
 import random
 from random import randint
 import asyncio
+import string
 
 intents = discord.Intents().all()
 intents.members = True
@@ -45,12 +46,15 @@ async def on_message(message):
     if len(messageContent) > 0:
         thing = messageContent
         for word in word_list:
-            if word in messageContent:
+            if (word in messageContent) or (word.upper() in messageContent) or (word.lower() in messageContent):
                 await message.delete()
                 e = discord.Embed(color=0x4b087a)
                 await channel.send(user.mention + " said " + thing)
                 e.add_field(name='Your message was removed!',
-                            value=' Sorry please refrain from saying ' + thing + ' or any profanity!!')
+                            value='Any communication (verbal or written) considered hateful or discriminatory will '
+                                  'not be tolerated during the hackathon. Please refer to our rules and guidelines to '
+                                  'understand DEEDhacks’ values and the use of appropriate language. Sorry please '
+                                  'refrain from saying ' + thing + ' or any profanity!')
                 await DMChannel.send(user, embed=e)
     with open("spam.txt", 'r+') as file:
         for lines in file:
@@ -58,11 +62,15 @@ async def on_message(message):
                 counter += 1
 
         file.writelines(f"{str(message.author.id)}\n")
-        if counter > 5:
+        if counter > 10:
             await channel.send(user.mention + " Has been kicked from the server for spamming!")
             e = discord.Embed(color=0x4b087a)
             e.add_field(name='Sorry you have been kicked!',
-                        value=' You now have been kicked from the server DeedHacks due to spamming!')
+                        value='As a hacker, you have violated the rules for inclusive language and behaviour. '
+                              'Thus, the DEEDhacks team has decided to remove you from this hackathon. You now have '
+                              'been kicked from the server DeedHacks due to spamming! An organizer will contact you '
+                              'shortly, if you believe this is a mistake contact Sharanjit Virdi **(SharanjitV#2577)** '
+                              'to further discuss this issue.')
             await DMChannel.send(user, embed=e)
             await asyncio.sleep(1)
             await message.guild.ban(message.author, reason="Spam")
@@ -76,7 +84,7 @@ async def on_message(message):
 async def on_command_error(ctx, error):
     moderator = discord.utils.get(ctx.guild.roles, name="admins")
     if isinstance(error, commands.MissingRole):
-        await ctx.send(hidden=True, content=ctx.author.mention + " you need " + moderator.mention + " to use this command!")
+        await ctx.send(ctx.author.mention + " you need " + moderator.mention + " to use this command!")
 
 
 @client.event
@@ -192,7 +200,7 @@ async def verify(ctx: SlashContext, email: str):
             await ctx.send(hidden=True, content='You are already verified! Contact the server moderators '
                            + moderator.mention + ' if you think there is a mistake.')
     else:
-        await ctx.send(hidden=True, content="Wrong channel " + ctx.author.mention + ", please use the the " + check_in.mention)
+        await ctx.send("Wrong channel " + ctx.author.mention + ", please use the the " + check_in.mention)
 
 
 @slash.slash(description="Provides information about WIE bot and DeedHacks!!", guild_ids=[849957341583376395])
@@ -262,6 +270,16 @@ async def on_raw_reaction_add(payload):
             role = discord.utils.get(guild.roles, name="PHP")
         elif payload.emoji.name == 'DevOP':
             role = discord.utils.get(guild.roles, name="DevOPS")
+        elif payload.emoji.name == 'Matlab':
+            role = discord.utils.get(guild.roles, name="Matlab")
+        elif payload.emoji.name == 'Customer':
+            role = discord.utils.get(guild.roles, name="Customer Success")
+        elif payload.emoji.name == 'Sales':
+            role = discord.utils.get(guild.roles, name="Sales Development")
+        elif payload.emoji.name == 'Management':
+            role = discord.utils.get(guild.roles, name="Product Management")
+        elif payload.emoji.name == 'Marketing':
+            role = discord.utils.get(guild.roles, name="Product Marketing")
         else:
             role = discord.utils.get(guild.roles, name=payload.emoji.name)
 
@@ -269,7 +287,7 @@ async def on_raw_reaction_add(payload):
             member = payload.member
             if member:
                 await member.add_roles(role)
-                await member.send(hidden=True, content=f"{member.mention} You reacted with {payload.emoji} to receive the {role} role!")
+                await member.send(f"{member.mention} You reacted with {payload.emoji} to receive the {role} role!")
             else:
                 await channel.send(hidden=True, content="Error please mention a moderator!")
         else:
@@ -286,7 +304,7 @@ async def on_raw_reaction_add(payload):
             member = guild.get_member(payload.user_id)
             if member:
                 await member.add_roles(role)
-                await member.send(hidden=True, content=f"{member.mention} You reacted with {payload.emoji} to receive the {role} role!")
+                await member.send(f"{member.mention} You reacted with {payload.emoji} to receive the {role} role!")
             else:
                 await channel.send(hidden=True, content="Error please mention a moderator!")
         else:
@@ -331,6 +349,16 @@ async def on_raw_reaction_remove(payload):
             role = discord.utils.get(guild.roles, name="PHP")
         elif payload.emoji.name == 'DevOP':
             role = discord.utils.get(guild.roles, name="DevOPS")
+        elif payload.emoji.name == 'Matlab':
+            role = discord.utils.get(guild.roles, name="Matlab")
+        elif payload.emoji.name == 'Customer':
+            role = discord.utils.get(guild.roles, name="Customer Success")
+        elif payload.emoji.name == 'Sales':
+            role = discord.utils.get(guild.roles, name="Sales Development")
+        elif payload.emoji.name == 'Management':
+            role = discord.utils.get(guild.roles, name="Product Management")
+        elif payload.emoji.name == 'Marketing':
+            role = discord.utils.get(guild.roles, name="Product Marketing")
         else:
             role = discord.utils.get(guild.roles, name=payload.emoji.name)
 
@@ -338,7 +366,7 @@ async def on_raw_reaction_remove(payload):
             member = guild.get_member(payload.user_id)
             if member:
                 await member.remove_roles(role)
-                await member.send(hidden=True, content=f"{member.mention} You reacted with {payload.emoji} to remove the {role} role!")
+                await member.send(f"{member.mention} You reacted with {payload.emoji} to remove the {role} role!")
             else:
                 await channel.send(hidden=True, content="Error please mention a moderator!")
         else:
@@ -354,7 +382,7 @@ async def on_raw_reaction_remove(payload):
             member = guild.get_member(payload.user_id)
             if member:
                 await member.remove_roles(role)
-                await member.send(hidden=True, content=f"{member.mention} You reacted with {payload.emoji} to remove the {role} role!")
+                await member.send(f"{member.mention} You reacted with {payload.emoji} to remove the {role} role!")
             else:
                 await channel.send(hidden=True, content="Error please mention a moderator!")
         else:
@@ -381,7 +409,7 @@ async def clear(ctx):
     current = ctx.channel.id
     if current == admin or current == role or current == care:
         await ctx.message.delete()
-        await ctx.channel.send(hidden=True, content="Can't use this command here!")
+        await ctx.channel.send("Can't use this command here!")
     else:
         await ctx.channel.purge()
 
@@ -408,7 +436,12 @@ async def mroles(ctx):
                    + "<:DB:851210525954015272>: For Database Mentors \n"
                    + "<:DevOP:851210630353518592>: For DevOPS Mentors \n"
                    + "<:GO:851210558091034676>: For GO Lang Mentors \n"
-                   + "<:PHP:851210594765111326>: For PHP Mentors \n")
+                   + "<:PHP:851210594765111326>: For PHP Mentors \n"
+                   + "<:Matlab:858291678620286976>: For Matlab Mentors \n"
+                   + "<:Marketing:858291788942016532>: For Product Marketing Mentors \n"
+                   + "<:Sales:858291710856396830>: For Sales Development Mentors \n"
+                   + "<:Management:858291737943343144>: For Product Management Mentors \n"
+                   + "<:Customer:858291902696783872>: For Customer Success Mentors \n")
 
 
 @tasks.loop(hours=1)
@@ -520,9 +553,17 @@ async def _8ball(ctx: SlashContext, question):
                  " You may rely on it"
                  ]
     if set(question).difference(ascii_letters):
-        await ctx.send(hidden=True, content=f"{ctx.author.mention}'s Asked: {question}\nFortune: **{random.choice(responses)}**")
+        with open('swearWords.txt', 'r') as file:
+            word_list = file.read().splitlines()
+        for word in word_list:
+            if (word in question) or (word.upper() in question) or (word.lower() in question):
+                await ctx.send(hidden=True,
+                               content="Error Occurred. Please make sure you have asked an appropriate question!")
+                await channel.send(f"{ctx.author} experienced a error using 8ball.")
+            else:
+                await ctx.send(hidden=True, content=f"{ctx.author.mention} Asked: {question}\nFortune: **{random.choice(responses)}**")
     else:
-        await ctx.send(hidden=True, content="Error Occurred. Please make sure you have asked a question!")
+        await ctx.send(hidden=True, content="Error Occurred. Please make sure you have asked a proper question!")
         await channel.send(f"{ctx.author} experienced a error using 8ball.")
 
 
