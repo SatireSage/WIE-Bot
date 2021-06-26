@@ -236,7 +236,7 @@ async def verification(ctx):
 async def on_raw_reaction_add(payload):
     message_id = payload.message_id
     channel = client.get_channel(payload.channel_id)
-    if message_id == 851211972368269352:
+    if message_id == 858295134242996224:
         guild_id = payload.guild_id
         guild = discord.utils.find(lambda g: g.id == guild_id, client.guilds)
 
@@ -315,7 +315,7 @@ async def on_raw_reaction_add(payload):
 async def on_raw_reaction_remove(payload):
     message_id = payload.message_id
     channel = client.get_channel(payload.channel_id)
-    if message_id == 851211972368269352:
+    if message_id == 858295134242996224:
         guild_id = payload.guild_id
         guild = discord.utils.find(lambda g: g.id == guild_id, client.guilds)
 
@@ -421,7 +421,7 @@ async def mroles(ctx):
                              description="Hey there mentors! Please react to the following message with the correct emojis to receive roles!",
                              color=0x4b087a)
     await ctx.channel.send(embed=embedVar)
-    await ctx.send(hidden=True, content="The roles are as follows: \n"
+    await ctx.send(content="The roles are as follows: \n"
                    + "<:Linux:851189700533944341>: For Linux Mentors \n"
                    + "<:Git:851163737640534047>: For Git Mentors \n"
                    + "<:Android:851163699556122723>: For Android Studio Mentors \n"
@@ -553,15 +553,8 @@ async def _8ball(ctx: SlashContext, question):
                  " You may rely on it"
                  ]
     if set(question).difference(ascii_letters):
-        with open('swearWords.txt', 'r') as file:
-            word_list = file.read().splitlines()
-        for word in word_list:
-            if (word in question) or (word.upper() in question) or (word.lower() in question):
-                await ctx.send(hidden=True,
-                               content="Error Occurred. Please make sure you have asked an appropriate question!")
-                await channel.send(f"{ctx.author} experienced a error using 8ball.")
-            else:
-                await ctx.send(hidden=True, content=f"{ctx.author.mention} Asked: {question}\nFortune: **{random.choice(responses)}**")
+        await ctx.send(hidden=True,
+                       content=f"{ctx.author.mention} Asked: {question}\nFortune: **{random.choice(responses)}**")
     else:
         await ctx.send(hidden=True, content="Error Occurred. Please make sure you have asked a proper question!")
         await channel.send(f"{ctx.author} experienced a error using 8ball.")
