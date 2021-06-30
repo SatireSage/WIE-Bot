@@ -187,8 +187,26 @@ async def verify(ctx: SlashContext, email: str):
                 e = discord.Embed(color=0x4b087a)
                 await ctx.author.remove_roles(unverified)
                 e.add_field(name='Thank you for verifying!',
-                            value=' You now have access to the server. Welcome to DeedHacks '
-                                  + first_mame + " " + last_name + '!')
+                            value='Welcome to DEEDhacks 2021 '
+                                  + first_mame + " " + last_name + '!' + 'DEEDhacks is '
+                                                                         'organized by SFU Women in Engineering, '
+                                                                         'but you can call us WiE! WiE SFU is '
+                                                                         'committed to increasing representation and '
+                                                                         'awareness of nonconforming groups in the '
+                                                                         'engineering profession and is actively '
+                                                                         'working to ensure that the engineering '
+                                                                         'field is more diverse, inclusive and '
+                                                                         'reflective of the future.  WiE hope you '
+                                                                         'have a great experience at DEEDhacks this '
+                                                                         'weekend and WiE encourage you to '
+                                                                         'participate in the activities throughout '
+                                                                         'the event!  Happy hacking!! Please read '
+                                                                         'through our community guidelines in the '
+                                                                         '#rules channel. By now you should have '
+                                                                         'verified yourself in the #check-in-details '
+                                                                         'channel with your email to access the rest '
+                                                                         'of the server. If you are having issues, '
+                                                                         'ping @admins for help!')
                 await ctx.author.send(embed=e)
                 await ctx.author.add_roles(verify_member)  # adds the verified role to the member
                 await ctx.send(hidden=True, content=(ctx.author.mention + " Please check your discord inbox for more info!"))
